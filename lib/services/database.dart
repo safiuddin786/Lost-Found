@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lf_test/modal/userdetails.dart';
 import 'package:lf_test/modal/lost_found.dart';
@@ -10,12 +9,14 @@ class DataBase{
   final CollectionReference lfCollection = FirebaseFirestore.instance.collection("lost&found");
   final uid;
   final appStorage = AppStorage();
+  static dynamic previousSnap;
   DataBase({this.uid});
 
 //  update to the database
-  Future updateDatabase({required String name}) async{
+  Future updateDatabase({required String name, required String phone}) async{
     return await collection.doc(uid).set({
       'name': name,
+      'phone': phone
     });
   }
 
@@ -52,7 +53,14 @@ class DataBase{
 
 //  Stream of data
   Stream<List<LostFound>> get lostFound{
-    return lfCollection.snapshots().map(getLostFound);
+    // Show only new documents
+    if(previousSnap != null){
+      return lfCollection.limit(10).startAfterDocument(previousSnap).snapshots().map(getLostFound);
+    }
+    // if its first time then only limit
+    else {
+      return lfCollection.limit(100).snapshots().map(getLostFound);
+    }
   }
 
 // update to the lost&found

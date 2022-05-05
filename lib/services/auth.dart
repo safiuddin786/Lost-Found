@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lf_test/modal/member.dart';
+import 'package:lf_test/services/database.dart';
+
 class Auth{
 
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -15,10 +17,12 @@ class Auth{
   }
 
 //  register
-  Future register(String email, String password) async{
+  Future register(String email, String password, String name, String phone) async{
     try {
       UserCredential result = await auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      DataBase db = DataBase(uid: user!.uid);
+      await db.updateDatabase(name: name, phone: phone);
       return userFromFirebase(user);
     } catch (e) {
       print("Error while creating user");
@@ -52,5 +56,9 @@ class Auth{
 //  sign out
   Future<void> signOut() async{
     await auth.signOut();
+  }
+
+//  change password
+  Future<void> changePassword() async{
   }
 }
