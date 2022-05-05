@@ -22,7 +22,7 @@ class Auth{
       UserCredential result = await auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       DataBase db = DataBase(uid: user!.uid);
-      await db.updateDatabase(name: name, phone: phone);
+      await db.updateDatabase(name: name, phone: phone, password: password);
       return userFromFirebase(user);
     } catch (e) {
       print("Error while creating user");

@@ -13,10 +13,11 @@ class DataBase{
   DataBase({this.uid});
 
 //  update to the database
-  Future updateDatabase({required String name, required String phone}) async{
+  Future updateDatabase({required String name, required String phone, required String password}) async{
     return await collection.doc(uid).set({
       'name': name,
-      'phone': phone
+      'phone': phone,
+      'password': password
     });
   }
 
