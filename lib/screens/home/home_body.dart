@@ -26,14 +26,16 @@ class _HomeBodyState extends State<HomeBody> {
     // scrollController.addListener(scrollListener);
     super.initState();
   }
+
   void scrollListener(){
     if(scrollController.offset > scrollController.position.maxScrollExtent/2){
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final lfDB = Provider.of<List<LostFound>>(context);
-    // authuser= Provider.of<Member?>(context);
+    authuser= Provider.of<Member?>(context);
     return Container(
       child: IconButton(icon: Icon(Icons.camera_alt), onPressed: getImage),
     );
