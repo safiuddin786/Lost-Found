@@ -9,13 +9,18 @@ import 'package:provider/provider.dart';
 
 
 class LForm extends StatefulWidget {
+  String category = '';
+  String phone = '';
+  String description = '';
+  String location = '';
+  String date = '';
   @override
   State<LForm> createState() => _LFormState();
 }
 
 class _LFormState extends State<LForm> {
+  File? imageFile;
   dynamic authuser;
-  String 
   ImagePicker _picker=new ImagePicker();
 
   @override
@@ -46,6 +51,14 @@ class _LFormState extends State<LForm> {
                             Expanded(
                               flex: 5,
                               child: TextFormField(
+                                onChanged: (val){
+                                  widget.category = val;
+                                },
+                                onSaved: (val){
+                                  setState((){
+                                    if(val != null) widget.category = val;
+                                  });
+                                },
                                 decoration: InputDecoration(
                                   fillColor: Colors.white, filled: true,
                                   border: OutlineInputBorder(),
@@ -58,6 +71,14 @@ class _LFormState extends State<LForm> {
                             Expanded(
                               flex: 5,
                               child: TextFormField(
+                                onChanged: (val){
+                                  widget.location = val;
+                                },
+                                onSaved: (val){
+                                  setState((){
+                                    if(val != null) widget.location = val;
+                                  });
+                                },
                                 decoration: InputDecoration(
                                   fillColor: Colors.white, filled: true,
                                   border: OutlineInputBorder(),
@@ -74,6 +95,14 @@ class _LFormState extends State<LForm> {
                               Expanded(
                                 flex: 5,
                                 child: TextFormField(
+                                  onChanged: (val){
+                                    widget.description = val;
+                                  },
+                                  onSaved: (val){
+                                    setState((){
+                                      if(val != null) widget.description = val;
+                                    });
+                                  },
                                   decoration: InputDecoration(
                                     fillColor: Colors.white, filled: true,
                                     border: OutlineInputBorder(),
@@ -85,6 +114,14 @@ class _LFormState extends State<LForm> {
                               Expanded(
                                 flex: 5,
                                 child: TextFormField(
+                                  onChanged: (val){
+                                    widget.date = val;
+                                  },
+                                  onSaved: (val){
+                                    setState((){
+                                      if(val != null) widget.date = val;
+                                    });
+                                  },
                                   decoration: InputDecoration(
                                     fillColor: Colors.white, filled: true,
                                     border: OutlineInputBorder(),
@@ -101,6 +138,14 @@ class _LFormState extends State<LForm> {
                               Expanded(
                                 flex: 9,
                                 child: TextFormField(
+                                  onChanged: (val){
+                                    widget.phone = val;
+                                  },
+                                  onSaved: (val){
+                                    setState((){
+                                      if(val != null) widget.phone = val;
+                                    });
+                                  },
                                   decoration: InputDecoration(
                                     fillColor: Colors.white, filled: true,
                                     border: OutlineInputBorder(),
@@ -138,11 +183,18 @@ class _LFormState extends State<LForm> {
   getImage() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     File file = File(photo!.path);
-    String store = "Storage.jpg";
-    await new DataBase(uid: authuser.uid).updateImg(file);
+    setState((){
+      imageFile = file;
+    });
   }
 
   updateData() async{
-
+    DataBase db = DataBase(uid: authuser.uid);
+    String imageUrl = "";
+    if(imageFile != null){
+      imageUrl = await db.uploadImage(imageFile!, widget.category+widget.date);
+    }
+    await db.updateLostFound(type: "lost", date: widget.date, location: widget.location, description: widget.description,
+    phone: widget.phone, imageUrl: imageUrl, category: widget.category);
   }
 }

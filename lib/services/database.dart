@@ -27,6 +27,10 @@ class DataBase{
     await collection.doc(uid).update({'image': imageUrl});
   }
 
+  Future uploadImage(File image, String name) async{
+    var imageUrl = await appStorage.uploadImg(image, name);
+    return imageUrl;
+  }
 
 // Lost and Found Database HERE
 
@@ -66,7 +70,7 @@ class DataBase{
 
 // update to the lost&found
   Future updateLostFound({String? description, String? imageUrl, required String type, String? category, String? location, String? date, String? phone}) async{
-    return await lfCollection.doc(uid).update({
+    return await lfCollection.doc(uid).set({
       type: FieldValue.arrayUnion([{
         'category': category,
         'location': location,
