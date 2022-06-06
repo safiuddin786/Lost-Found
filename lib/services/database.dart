@@ -65,11 +65,14 @@ class DataBase{
   }
 
 // update to the lost&found
-  Future updateLostFound({String? description, String? imageUrl, required String type, String? name}) async{
+  Future updateLostFound({String? description, String? imageUrl, required String type, String? category, String? location, String? date, String? phone}) async{
     return await lfCollection.doc(uid).update({
       type: FieldValue.arrayUnion([{
-        'name': name,
+        'category': category,
+        'location': location,
+        'date': date,
         'description': description,
+        'phone': phone,
         'image': imageUrl
       }])
     });

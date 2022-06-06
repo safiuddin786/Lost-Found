@@ -12,20 +12,6 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Auth();
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Home Screen'),
-          actions: [
-            TextButton.icon(
-                onPressed: () async {
-                  await auth.signOut();
-                },
-                icon: Icon(
-                  Icons.logout,
-                  color: Colors.red,
-                ),
-                label: Text("Logout", style: TextStyle(color: Colors.white)))
-          ],
-        ),
         body: StreamProvider<List<LostFound>>.value(
           initialData: [],
           value: DataBase().lostFound,
